@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+service NodeServer {
+    rpc GetValue(Key) returns (Value) {}
+    rpc SetValue(KeyValue) returns (SetValueResponse) {}
+    rpc RequestKeys(RequestKeysParams) returns (stream KeyValue) {}
+    rpc SendKeys(stream KeyValue) returns (SendKeysResponse) {}
+}
+ 
+message Key {
+    string name = 1;
+}
+
+message Value {
+    int32 version = 1;
+    int32 created = 2;
+    string data = 3;
+
+}
+message KeyValue {
+    Key key = 1;
+    Value value = 2;
+
+}
+
+message RequestKeysParams {
+    int32 limit = 1;
+}
+
+message SetValueResponse {
+    enum Result {
+        ADDED = 0;
+        EXISTS = 1;
+        FAILED = 2;
+    }
+    Result result = 1;
+}
+
+message SendKeysResponse {
+    int32 received = 1;
+    int32 updated = 2;
+}
